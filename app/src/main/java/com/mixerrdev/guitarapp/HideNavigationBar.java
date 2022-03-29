@@ -19,6 +19,19 @@ public class HideNavigationBar {
 
         if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
             activity.getWindow().getDecorView().setSystemUiVisibility(flags);
+
+            final View decorView = activity.getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+            {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility)
+                {
+                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                    {
+                        decorView.setSystemUiVisibility(flags);
+                    }
+                }
+            });
         }
     }
 }
