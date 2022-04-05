@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
 
-        // Hiding navigation bar
-        HideNavigationBar.hide(this);
 
 
         // Video on background
@@ -61,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        HideNavigationBar.hide(this);
         videoBG.start();
     }
 

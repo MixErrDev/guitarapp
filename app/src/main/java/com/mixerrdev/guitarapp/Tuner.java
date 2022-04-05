@@ -10,6 +10,5 @@ public class Tuner extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tuner);
-        HideNavigationBar.hide(this);
     }
 }

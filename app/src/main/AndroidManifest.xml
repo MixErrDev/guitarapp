@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GuitarApp">
         <activity
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".Lessons"
             android:exported="false"
             android:screenOrientation="userLandscape">
@@ -21,6 +22,7 @@
         </activity>
 
         <activity
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".Metronome"
             android:exported="false"
             android:screenOrientation="userLandscape">
@@ -32,6 +34,7 @@
         </activity>
 
         <activity
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".Tuner"
             android:exported="false"
             android:screenOrientation="userLandscape">
@@ -43,6 +46,7 @@
         </activity>
 
         <activity
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="userLandscape">
