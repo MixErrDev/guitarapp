@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity{
     Button tuner, metronome, lessons;
+    Intent intent;
+
     VideoView videoBG;
     MediaPlayer mMediaPlayer;
     int mCurrentVideoPosition;
@@ -49,9 +51,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tuner = (Button) findViewById(R.id.tuner);
         lessons = (Button) findViewById(R.id.lessons);
 
-        metronome.setOnClickListener(this);
-        tuner.setOnClickListener(this);
-        lessons.setOnClickListener(this);
+        metronome.setOnClickListener((View v) -> {
+                intent = new Intent("android.intent.action.metronome");
+                startActivity(intent);
+        });
+        tuner.setOnClickListener((View v) -> {
+            intent = new Intent("android.intent.action.tuner");
+            startActivity(intent);
+        });
+        lessons.setOnClickListener((View v) -> {
+            intent = new Intent("android.intent.action.lessons");
+            startActivity(intent);
+        });
     }
 
 
@@ -60,27 +71,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         videoBG.start();
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent intent;
-
-        switch (view.getId()) {
-            case R.id.metronome:
-                intent = new Intent("android.intent.action.metronome");
-                startActivity(intent);
-                break;
-
-            case R.id.tuner:
-                intent = new Intent("android.intent.action.tuner");
-                startActivity(intent);
-                break;
-
-            case R.id.lessons:
-                intent = new Intent("android.intent.action.lessons");
-                startActivity(intent);
-                break;
-        }
     }
 }
