@@ -10,5 +10,8 @@ public class Lessons extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lessons);
+
+        // Hiding Navigation Bar
+        ModsUI.hide(this);
     }
 }

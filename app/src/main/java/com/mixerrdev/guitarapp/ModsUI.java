@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.view.View;
 
-public class HideNavigationBar {
+public class ModsUI {
 
     // Hiding NavigationBar
     public static void hide(Activity activity) {

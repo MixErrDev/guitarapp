@@ -5,13 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
+
+
     Button tuner, metronome, lessons;
     Intent intent;
 
@@ -23,7 +24,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // Hiding Navigation Bar
+        ModsUI.hide(this);
 
 
         // Video on background
@@ -69,6 +71,9 @@ public class MainActivity extends AppCompatActivity{
     // Overriding onResume for hiding navigation bar and playing video
     @Override
     protected void onResume() {
+        // Hiding Navigation Bar
+        ModsUI.hide(this);
+
         super.onResume();
         videoBG.start();
     }
