@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 
 public class Tuner extends AppCompatActivity {
+    int STORAGE_PERMISSION_CODE = 1;
+
 
     final String TAG = "myLogs";
 
@@ -91,18 +93,21 @@ public class Tuner extends AppCompatActivity {
                 + ", internalBufferSize = " + internalBufferSize
                 + ", myBufferSize = " + myBufferSize);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
+        } else {
+            requestStoragePermission();
         }
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                sampleRate, channelConfig, audioFormat, internalBufferSize);
+    }
+
+    private void requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, STORAGE_PERMISSION_CODE);
+        }
     }
 
 
