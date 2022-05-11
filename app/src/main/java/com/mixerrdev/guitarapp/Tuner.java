@@ -10,12 +10,15 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import org.jtransforms.fft.DoubleFFT_1D;
 
 public class Tuner extends AppCompatActivity {
     int STORAGE_PERMISSION_CODE = 1;
 
+    boolean isReading;
+    int myBufferSize = 8192;
 
     final String TAG = "myLogs";
     AudioRecord audioRecord;
@@ -50,6 +53,27 @@ public class Tuner extends AppCompatActivity {
         } else {
             requestStoragePermission();
         }
+    }
+
+    public void readStart(View v) {
+        Log.d(TAG, "read start");
+        isReading = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (audioRecord == null)
+                    return;
+
+                byte[] myBuffer = new byte[myBufferSize];
+                int readCount = 0;
+                int totalCount = 0;
+                while (isReading) {
+                    readCount = audioRecord.read(myBuffer, 0, myBufferSize);
+                    totalCount += readCount;
+                    Log.d(TAG, "readCount = " + readCount + ", totalCount = " + totalCount);
+                }
+            }
+        }).start();
     }
 
     private void requestStoragePermission() {
