@@ -11,6 +11,8 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.jtransforms.fft.DoubleFFT_1D;
+
 public class Tuner extends AppCompatActivity {
     int STORAGE_PERMISSION_CODE = 1;
 
