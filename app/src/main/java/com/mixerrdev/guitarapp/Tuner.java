@@ -11,6 +11,8 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.jtransforms.fft.DoubleFFT_1D;
 
@@ -22,6 +24,9 @@ public class Tuner extends AppCompatActivity {
 
     final String TAG = "myLogs";
     AudioRecord audioRecord;
+
+    Button startRecord, stopRecord, startRead, stopRead;
+    TextView result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,54 @@ public class Tuner extends AppCompatActivity {
 
         Log.d(TAG, "init state = " + audioRecord.getState());
 
-        recordStart();
-        readStart();
+        startRecord = findViewById(R.id.startRecord);
+        stopRecord = findViewById(R.id.stopRecord);
+        startRead = findViewById(R.id.startRead);
+        stopRead = findViewById(R.id.stopRead);
+        result = findViewById(R.id.result);
+
+        startRecord.setOnClickListener((View v) -> {
+            Log.d(TAG, "record start");
+            audioRecord.startRecording();
+            int recordingState = audioRecord.getRecordingState();
+            Log.d(TAG, "recordingState = " + recordingState);
+        });
+
+        stopRecord.setOnClickListener((View v) -> {
+            Log.d(TAG, "record stop");
+            audioRecord.stop();
+        });
+
+        startRead.setOnClickListener((View v) -> {
+            Log.d(TAG, "read start");
+            isReading = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (audioRecord == null)
+                        return;
+
+                    short[] myBuffer = new short[myBufferSize];
+                    int readCount = 0;
+                    int totalCount = 0;
+                    while (isReading) {
+                        readCount = audioRecord.read(myBuffer, 0, myBufferSize);
+                        totalCount += readCount;
+                        Log.d(TAG, "readCount = " + readCount + ", totalCount = "
+                                + totalCount);
+                    }
+                    FrequencyScanner fft = new FrequencyScanner();
+                    double rst = fft.extractFrequency(myBuffer, 8000);
+                    Log.d(TAG, "fft = " + rst);
+
+                }
+            }).start();
+        });
+
+        stopRead.setOnClickListener((View v) -> {
+            Log.d(TAG, "read stop");
+            isReading = false;
+        });
 
     }
 
