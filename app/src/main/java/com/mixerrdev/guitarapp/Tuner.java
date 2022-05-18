@@ -34,6 +34,10 @@ public class Tuner extends AppCompatActivity {
         createAudioRecorder();
 
         Log.d(TAG, "init state = " + audioRecord.getState());
+
+        recordStart();
+        readStart();
+
     }
 
     void createAudioRecorder() {
@@ -55,7 +59,14 @@ public class Tuner extends AppCompatActivity {
         }
     }
 
-    public void readStart(View v) {
+    public void recordStart() {
+        Log.d(TAG, "record start");
+        audioRecord.startRecording();
+        int recordingState = audioRecord.getRecordingState();
+        Log.d(TAG, "recordingState = " + recordingState);
+    }
+
+    public void readStart() {
         Log.d(TAG, "read start");
         isReading = true;
         new Thread(new Runnable() {
@@ -64,7 +75,7 @@ public class Tuner extends AppCompatActivity {
                 if (audioRecord == null)
                     return;
 
-                byte[] myBuffer = new byte[myBufferSize];
+                short[] myBuffer = new short[myBufferSize];
                 int readCount = 0;
                 int totalCount = 0;
                 while (isReading) {
@@ -72,6 +83,9 @@ public class Tuner extends AppCompatActivity {
                     totalCount += readCount;
                     Log.d(TAG, "readCount = " + readCount + ", totalCount = " + totalCount);
                 }
+                FrequencyScanner fft = new FrequencyScanner();
+                double rst = fft.extractFrequency(myBuffer, 8000);
+                Log.d(TAG, "fft = " + rst);
             }
         }).start();
     }

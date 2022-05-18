@@ -10,14 +10,14 @@ public class FrequencyScanner {
     }
 
     public double extractFrequency(short[] sampleData, int sampleRate) {
-        /* sampleData + zero padding */
+        // sampleData + zero padding
         DoubleFFT_1D fft = new DoubleFFT_1D(sampleData.length + 24 * sampleData.length);
         double[] a = new double[(sampleData.length + 24 * sampleData.length) * 2];
 
         System.arraycopy(applyWindow(sampleData), 0, a, 0, sampleData.length);
         fft.realForward(a);
 
-        /* find the peak magnitude and it's index */
+        // find the peak magnitude and it's index
         double maxMag = Double.NEGATIVE_INFINITY;
         int maxInd = -1;
 
@@ -32,7 +32,7 @@ public class FrequencyScanner {
             }
         }
 
-        /* calculate the frequency */
+        // calculate the frequency
         return (double)sampleRate * maxInd / (a.length / 2);
     }
 
