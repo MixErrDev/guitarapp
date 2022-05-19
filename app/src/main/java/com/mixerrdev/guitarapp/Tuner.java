@@ -2,6 +2,7 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -10,14 +11,11 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.jtransforms.fft.DoubleFFT_1D;
 
 public class Tuner extends AppCompatActivity {
-    int STORAGE_PERMISSION_CODE = 1;
+    private static int MICROPHONE_PERMISSION_CODE = 200;
 
     boolean isReading;
     int myBufferSize = 8192;
@@ -25,7 +23,6 @@ public class Tuner extends AppCompatActivity {
     final String TAG = "myLogs";
     AudioRecord audioRecord;
 
-    Button startRecord, stopRecord, startRead, stopRead;
     TextView result;
 
     @Override
@@ -36,59 +33,19 @@ public class Tuner extends AppCompatActivity {
         // Hiding Navigation Bar
         ModsUI.hide(this);
 
-        createAudioRecorder();
+        if (isMicrophonePresent()) {
+            getMicrophonePermission();
+        }
 
-        Log.d(TAG, "init state = " + audioRecord.getState());
-
-        startRecord = findViewById(R.id.startRecord);
-        stopRecord = findViewById(R.id.stopRecord);
-        startRead = findViewById(R.id.startRead);
-        stopRead = findViewById(R.id.stopRead);
         result = findViewById(R.id.result);
 
-        startRecord.setOnClickListener((View v) -> {
-            Log.d(TAG, "record start");
-            audioRecord.startRecording();
-            int recordingState = audioRecord.getRecordingState();
-            Log.d(TAG, "recordingState = " + recordingState);
-        });
+        // Start recording
+        createAudioRecorder();
+        Log.d(TAG, "init state = " + audioRecord.getState());
+        recordStart();
 
-        stopRecord.setOnClickListener((View v) -> {
-            Log.d(TAG, "record stop");
-            audioRecord.stop();
-        });
-
-        startRead.setOnClickListener((View v) -> {
-            Log.d(TAG, "read start");
-            isReading = true;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (audioRecord == null)
-                        return;
-
-                    short[] myBuffer = new short[myBufferSize];
-                    int readCount = 0;
-                    int totalCount = 0;
-                    while (isReading) {
-                        readCount = audioRecord.read(myBuffer, 0, myBufferSize);
-                        totalCount += readCount;
-                        Log.d(TAG, "readCount = " + readCount + ", totalCount = "
-                                + totalCount);
-                    }
-                    FrequencyScanner fft = new FrequencyScanner();
-                    double rst = fft.extractFrequency(myBuffer, 8000);
-                    Log.d(TAG, "fft = " + rst);
-
-                }
-            }).start();
-        });
-
-        stopRead.setOnClickListener((View v) -> {
-            Log.d(TAG, "read stop");
-            isReading = false;
-        });
-
+        // Start reading PCM data and getting frequency
+        readStart();
     }
 
     void createAudioRecorder() {
@@ -103,11 +60,12 @@ public class Tuner extends AppCompatActivity {
                 + ", internalBufferSize = " + internalBufferSize
                 + ", myBufferSize = " + internalBufferSize);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
-        } else {
-            requestStoragePermission();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, MICROPHONE_PERMISSION_CODE);
         }
+        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
+
     }
 
     public void recordStart() {
@@ -120,32 +78,44 @@ public class Tuner extends AppCompatActivity {
     public void readStart() {
         Log.d(TAG, "read start");
         isReading = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
+            while (isReading) {
                 if (audioRecord == null)
                     return;
 
                 short[] myBuffer = new short[myBufferSize];
-                int readCount = 0;
+                int readCount;
                 int totalCount = 0;
-                while (isReading) {
-                    readCount = audioRecord.read(myBuffer, 0, myBufferSize);
-                    totalCount += readCount;
-                    Log.d(TAG, "readCount = " + readCount + ", totalCount = " + totalCount);
-                }
+
+                // Reading PCM in myBuffer
+                readCount = audioRecord.read(myBuffer, 0, myBufferSize);
+                totalCount += readCount;
+                Log.d(TAG, "readCount = " + readCount + ", totalCount = " + totalCount);
+
+                // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
                 double rst = fft.extractFrequency(myBuffer, 8000);
-                Log.d(TAG, "fft = " + rst);
+                int d = Log.d(TAG, "fft = " + rst);
+
+                // Show frequency
+                runOnUiThread(() -> result.setText(Double.toString(rst)));
             }
         }).start();
     }
 
-    private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
 
-        } else {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, STORAGE_PERMISSION_CODE);
+    private boolean isMicrophonePresent() {
+        if (this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void getMicrophonePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, MICROPHONE_PERMISSION_CODE);
         }
     }
 }
