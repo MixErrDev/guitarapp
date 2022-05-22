@@ -33,39 +33,16 @@
 
     <Button
         android:id="@+id/tuner"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
         android:text="@string/tuner"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
 
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-
-        app:layout_constraintHorizontal_bias=".8"/>
-
-    <Button
-        android:id="@+id/metronome"
-        android:text="@string/metronome"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-
+        app:layout_constraintHorizontal_bias=".8"
         app:layout_constraintLeft_toLeftOf="parent"
+
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tuner"
-
-        app:layout_constraintHorizontal_bias=".8"/>
-
-    <Button
-        android:id="@+id/lessons"
-        android:text="@string/lessons"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tuner"
-
-        app:layout_constraintHorizontal_bias=".8"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 
 public class Tuner extends AppCompatActivity {
-    private static int MICROPHONE_PERMISSION_CODE = 200;
+
 
     boolean isReading;
     int myBufferSize = 8192;
@@ -32,10 +31,6 @@ public class Tuner extends AppCompatActivity {
 
         // Hiding Navigation Bar
         ModsUI.hide(this);
-
-        if (isMicrophonePresent()) {
-            getMicrophonePermission();
-        }
 
         result = findViewById(R.id.result);
 
@@ -61,11 +56,9 @@ public class Tuner extends AppCompatActivity {
                 + ", myBufferSize = " + internalBufferSize);
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, MICROPHONE_PERMISSION_CODE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
         }
-        audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
-
     }
 
     public void recordStart() {
@@ -95,27 +88,10 @@ public class Tuner extends AppCompatActivity {
                 // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
                 double rst = fft.extractFrequency(myBuffer, 8000);
-                int d = Log.d(TAG, "fft = " + rst);
 
                 // Show frequency
                 runOnUiThread(() -> result.setText(Double.toString(rst)));
             }
         }).start();
-    }
-
-
-    private boolean isMicrophonePresent() {
-        if (this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    private void getMicrophonePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECORD_AUDIO}, MICROPHONE_PERMISSION_CODE);
-        }
     }
 }
