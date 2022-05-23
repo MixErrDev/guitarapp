@@ -15,9 +15,16 @@ import android.widget.TextView;
 
 public class Tuner extends AppCompatActivity {
 
+    int sampleRate = 16000;
+    int channelConfig = AudioFormat.CHANNEL_IN_MONO;
+    int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+
+    int minInternalBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
+    int internalBufferSize = minInternalBufferSize * 2;
+
 
     boolean isReading;
-    int myBufferSize = 8192;
+    int myBufferSize = internalBufferSize*2;
 
     final String TAG = "myLogs";
     AudioRecord audioRecord;
@@ -43,14 +50,19 @@ public class Tuner extends AppCompatActivity {
         readStart();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        readStop();
+        recordStop();
+
+        if (audioRecord != null) {
+            audioRecord.release();
+        }
+    }
+
     void createAudioRecorder() {
-        int sampleRate = 8000;
-        int channelConfig = AudioFormat.CHANNEL_IN_MONO;
-        int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-
-        int minInternalBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
-        int internalBufferSize = minInternalBufferSize * 4;
-
         Log.d(TAG, "minInternalBufferSize = " + minInternalBufferSize
                 + ", internalBufferSize = " + internalBufferSize
                 + ", myBufferSize = " + internalBufferSize);
@@ -72,10 +84,10 @@ public class Tuner extends AppCompatActivity {
         Log.d(TAG, "read start");
         isReading = true;
         new Thread(() -> {
-            while (isReading) {
-                if (audioRecord == null)
-                    return;
 
+            if (audioRecord == null)
+                return;
+            while (isReading) {
                 short[] myBuffer = new short[myBufferSize];
                 int readCount;
                 int totalCount = 0;
@@ -87,11 +99,22 @@ public class Tuner extends AppCompatActivity {
 
                 // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
-                double rst = fft.extractFrequency(myBuffer, 8000);
+                double rst = fft.extractFrequency(myBuffer, sampleRate);
 
                 // Show frequency
                 runOnUiThread(() -> result.setText(Double.toString(rst)));
+
             }
         }).start();
+    }
+
+    public void readStop() {
+        Log.d(TAG, "read stop");
+        isReading = false;
+    }
+
+    public void recordStop() {
+        Log.d(TAG, "record stop");
+        audioRecord.stop();
     }
 }
