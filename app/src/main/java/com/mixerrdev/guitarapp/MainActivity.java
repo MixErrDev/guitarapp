@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Hiding Navigation Bar
         ModsUI.hide(this);
-
+        // Keeping screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Video on background
         videoBG = findViewById(R.id.videoView);
