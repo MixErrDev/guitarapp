@@ -54,6 +54,13 @@ public class Tuner extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        readStop();
+        recordStop();
+    }
 
     @Override
     protected void onStop() {
@@ -61,38 +68,12 @@ public class Tuner extends AppCompatActivity {
 
         readStop();
         recordStop();
-
-        if (audioRecord != null) {
-            audioRecord.release();
-        }
     }
 
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//
-//        createAudioRecorder();
-//        recordStart();
-//        readStart();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        readStop();
-//        recordStop();
-//
-//        if (audioRecord != null) {
-//            audioRecord.release();
-//        }
-//    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        createAudioRecorder();
+    protected void onRestart() {
+        super.onRestart();
         recordStart();
         readStart();
     }

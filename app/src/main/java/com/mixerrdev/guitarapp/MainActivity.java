@@ -72,11 +72,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Overriding onResume for hiding navigation bar and playing video
+    // Overriding onResume for playing video
     @Override
     protected void onResume() {
-        // Hiding Navigation Bar
-        ModsUI.hide(this);
 
         super.onResume();
         videoBG.start();
