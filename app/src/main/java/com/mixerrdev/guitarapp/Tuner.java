@@ -10,6 +10,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
@@ -38,6 +39,8 @@ public class Tuner extends AppCompatActivity {
 
         // Hiding Navigation Bar
         ModsUI.hide(this);
+        // Keeping screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         result = findViewById(R.id.result);
 
