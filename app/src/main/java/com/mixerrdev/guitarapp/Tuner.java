@@ -5,14 +5,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class Tuner extends AppCompatActivity {
@@ -33,7 +37,8 @@ public class Tuner extends AppCompatActivity {
     final String TAG = "myLogs";
     AudioRecord audioRecord;
 
-
+    boolean params = false;
+    Button buttonParams;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +49,23 @@ public class Tuner extends AppCompatActivity {
         ModsUI.hide(this);
         // Keeping screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        // Finding
         result = findViewById(R.id.result);
+        buttonParams = findViewById(R.id.buttonParams);
+        // Fragment logic
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, TunerStatus.class, null).commit();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.status, TunerStatus.class, null).commit();
-
+        buttonParams.setOnClickListener((View v) -> {
+            if (params) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, TunerStatus.class, null).commit();
+                params = false;
+                buttonParams.setText(R.string.params);
+            } else {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, Params.class, null).commit();
+                params = true;
+                buttonParams.setText(R.string.tuning);
+            }
+        });
 
         // Start recording
         createAudioRecorder();
