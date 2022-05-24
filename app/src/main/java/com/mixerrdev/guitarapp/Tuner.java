@@ -22,11 +22,10 @@ public class Tuner extends AppCompatActivity {
     int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
     int minInternalBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
-    int internalBufferSize = minInternalBufferSize * 2;
+    int myBufferSize = minInternalBufferSize * 2;
 
 
     boolean isReading;
-    int myBufferSize = internalBufferSize;
 
     final String TAG = "myLogs";
     AudioRecord audioRecord;
@@ -92,13 +91,9 @@ public class Tuner extends AppCompatActivity {
     }
 
     void createAudioRecorder() {
-        Log.d(TAG, "minInternalBufferSize = " + minInternalBufferSize
-                + ", internalBufferSize = " + internalBufferSize
-                + ", myBufferSize = " + internalBufferSize);
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, internalBufferSize);
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, myBufferSize);
         }
     }
 
@@ -125,7 +120,7 @@ public class Tuner extends AppCompatActivity {
 
                 // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
-                double rst[] = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
+                double[] rst = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
 
                 // Show frequency
                 runOnUiThread(() -> result.setText(Double.toString(rst[0])));
