@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
