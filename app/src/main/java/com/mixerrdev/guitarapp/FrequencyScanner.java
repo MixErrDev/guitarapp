@@ -9,7 +9,7 @@ public class FrequencyScanner {
         window = null;
     }
 
-    public double extractFrequency(short[] sampleData, int sampleRate) {
+    public double[] extractFrequencyMagnitude(short[] sampleData, int sampleRate) {
         // SampleData + zero padding
         DoubleFFT_1D fft = new DoubleFFT_1D(sampleData.length + 24 * sampleData.length);
         double[] a = new double[(sampleData.length + 24 * sampleData.length) * 2];
@@ -31,9 +31,9 @@ public class FrequencyScanner {
                 maxInd = i;
             }
         }
-
         // Calculate the frequency
-        return (double)sampleRate * maxInd / (double) (a.length / 2);
+        double frequency = (double)sampleRate * maxInd / (double) (a.length / 2);
+        return new double[] {frequency, maxMag};
     }
 
     private void buildHammWindow(int size) {

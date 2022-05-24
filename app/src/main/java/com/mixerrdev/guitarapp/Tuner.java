@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -25,7 +26,7 @@ public class Tuner extends AppCompatActivity {
 
 
     boolean isReading;
-    int myBufferSize = internalBufferSize*2;
+    int myBufferSize = internalBufferSize;
 
     final String TAG = "myLogs";
     AudioRecord audioRecord;
@@ -127,10 +128,12 @@ public class Tuner extends AppCompatActivity {
 
                 // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
-                double rst = fft.extractFrequency(myBuffer, sampleRate);
+                double rst[] = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
 
                 // Show frequency
-                runOnUiThread(() -> result.setText(Double.toString(rst)));
+                runOnUiThread(() -> result.setText(Double.toString(rst[0])));
+
+                Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
 
             }
         }).start();
