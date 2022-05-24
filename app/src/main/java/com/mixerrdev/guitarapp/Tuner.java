@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class Tuner extends AppCompatActivity {
 
-    int sampleRate = 16000;
+    int sampleRate = 8000;
     int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -116,15 +116,12 @@ public class Tuner extends AppCompatActivity {
 
             if (audioRecord == null)
                 return;
-            while (isReading) {
-                short[] myBuffer = new short[myBufferSize];
-                int readCount;
-                int totalCount = 0;
 
+            short[] myBuffer = new short[myBufferSize];
+
+            while (isReading) {
                 // Reading PCM in myBuffer
-                readCount = audioRecord.read(myBuffer, 0, myBufferSize);
-                totalCount += readCount;
-                Log.d(TAG, "readCount = " + readCount + ", totalCount = " + totalCount);
+                audioRecord.read(myBuffer, 0, myBufferSize);
 
                 // Getting frequency from PCM
                 FrequencyScanner fft = new FrequencyScanner();
