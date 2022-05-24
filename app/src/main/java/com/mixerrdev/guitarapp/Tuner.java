@@ -2,6 +2,7 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -45,6 +46,9 @@ public class Tuner extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         result = findViewById(R.id.result);
+
+        getSupportFragmentManager().beginTransaction().add(R.id.status, TunerStatus.class, null).commit();
+
 
         // Start recording
         createAudioRecorder();
