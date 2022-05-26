@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="tuning_variants">
-        <item>Classic</item>
-        <item>D-tuning</item>
-    </string-array>
-</resources>

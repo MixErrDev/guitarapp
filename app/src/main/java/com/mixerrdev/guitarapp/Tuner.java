@@ -2,6 +2,7 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -16,7 +17,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class Tuner extends AppCompatActivity {
+public class Tuner extends AppCompatActivity implements OnDataPass{
+    @Override
+    public void onDataPass(boolean parameter) {
+        classic = parameter;
+    }
 
     // Audio logic vars
     int sampleRate = 8000;
@@ -59,7 +64,7 @@ public class Tuner extends AppCompatActivity {
         statusText = findViewById(R.id.statusText);
 
         // Fragment logic
-        Params p = new Params();
+        Parameters p = new Parameters();
         buttonParams.setOnClickListener((View v) -> {
             if (paramsActive) {
                 tuningStart();
@@ -157,7 +162,7 @@ public class Tuner extends AppCompatActivity {
                 Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
 
                 // TODO CLASSIC -> TRUE/FALSE
-                TuningLogic tl = new TuningLogic(true);
+                TuningLogic tl = new TuningLogic(classic);
                 int string = tl.getString(rst[0], rst[1]);
                 int status = tl.getStatus(rst[0], rst[1]);
 

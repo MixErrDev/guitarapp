@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GuitarApp</string>
     <string name="tuner">Start Tuning!</string>
-    <string name="params">PARAMS</string>
+    <string name="params">PARAMETERS</string>
     <string name="tuning">TUNING</string>
     <string name="higher">HIGHER</string>
     <string name="lower">LOWER</string>
@@ -13,4 +13,6 @@
     <string name="third">3 STRING</string>
     <string name="fourth">4 STRING</string>
     <string name="unidentified">…</string>
+    <string name="classic">CLASSIC</string>
+    <string name="D">D-TUNING</string>
 </resources>
