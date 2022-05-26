@@ -6,7 +6,7 @@
     <string name="higher">HIGHER</string>
     <string name="lower">LOWER</string>
     <string name="tuned">TUNED</string>
-    <string name="quit">TO QUIT</string>
+    <string name="quiet">TO QUIET</string>
     <string name="loud">TO LOUD</string>
     <string name="first">1 STRING</string>
     <string name="second">2 STRING</string>

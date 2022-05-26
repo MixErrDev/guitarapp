@@ -62,6 +62,8 @@ public class Tuner extends AppCompatActivity {
         Params p = new Params();
         buttonParams.setOnClickListener((View v) -> {
             if (paramsActive) {
+                tuningStart();
+
                 getSupportFragmentManager().beginTransaction().remove(p).commit();
                 paramsActive = false;
                 buttonParams.setText(R.string.params);
@@ -69,6 +71,8 @@ public class Tuner extends AppCompatActivity {
                 statusText.setVisibility(View.VISIBLE);
 
             } else {
+                tuningStop();
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, p, null).commit();
                 paramsActive = true;
                 buttonParams.setText(R.string.tuning);
@@ -78,7 +82,7 @@ public class Tuner extends AppCompatActivity {
         });
 
         // Start reading PCM data and getting frequency
-        tuning();
+        tuningStart();
 
         // Developing mode
         frequencyText.setVisibility(View.INVISIBLE);
@@ -107,14 +111,14 @@ public class Tuner extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        tuning();
+        tuningStop();
     }
 
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        tuning();
+        tuningStart();
     }
 
     @Override
@@ -129,7 +133,7 @@ public class Tuner extends AppCompatActivity {
 
 
 
-    public void tuning() {
+    public void tuningStart() {
         createAudioRecorder();
         recordStart();
         Log.d(TAG, "read start");
@@ -180,7 +184,7 @@ public class Tuner extends AppCompatActivity {
 
                 switch (status) {
                     case (-1):
-                        runOnUiThread(() -> statusText.setText(R.string.quit));
+                        runOnUiThread(() -> statusText.setText(R.string.quiet));
                         break;
                     case (0):
                         runOnUiThread(() -> statusText.setText(R.string.loud));
@@ -227,7 +231,8 @@ public class Tuner extends AppCompatActivity {
     }
 
     public void tuningStop() {
-
+        recordStop();
+        readStop();
     }
 
     public void release() {
