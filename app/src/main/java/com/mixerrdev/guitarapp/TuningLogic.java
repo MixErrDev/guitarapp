@@ -13,6 +13,8 @@ public class TuningLogic {
 
     final double MIN_MAGNITUDE = 80000.0;
 
+    public boolean classic = true;
+
     // Init arrays
     public TuningLogic(boolean classic) {
         if (classic) {
@@ -26,6 +28,8 @@ public class TuningLogic {
             thirdStringTunedFrequency = new double[]{261.0, 262.1};
             fourthStringTunedFrequency = new double[]{391.5, 392.5};
         } else {
+            this.classic = false;
+
             firstStringFrequencyRange = new double[]{415.0, 465.0};
             secondStringFrequencyRange = new double[]{300.0, 349.0};
             thirdStringFrequencyRange = new double[]{220.0, 299.0};
@@ -39,69 +43,72 @@ public class TuningLogic {
     }
 
     // Return number of played string
-    public int getString(double frequency) {
+    public int getString(double frequency, double magnitude) {
         int string;
 
-        if (frequency >= firstStringFrequencyRange[0] && frequency <= firstStringFrequencyRange[1])
-            string = 1;
-        else if (frequency >= secondStringFrequencyRange[0] && frequency <= secondStringFrequencyRange[1])
-            string = 1;
-        else if (frequency >= thirdStringFrequencyRange[0] && frequency <= thirdStringFrequencyRange[1])
-            string = 1;
-        else if (frequency >= fourthStringFrequencyRange[0] && frequency <= fourthStringFrequencyRange[1])
-            string = 1;
-        else
-            string = 0;
+        if (magnitude >= MIN_MAGNITUDE) {
+            if (frequency >= firstStringFrequencyRange[0] && frequency <= firstStringFrequencyRange[1])
+                string = 1;
+            else if (frequency >= secondStringFrequencyRange[0] && frequency <= secondStringFrequencyRange[1])
+                string = 2;
+            else if (frequency >= thirdStringFrequencyRange[0] && frequency <= thirdStringFrequencyRange[1])
+                string = 3;
+            else if (frequency >= fourthStringFrequencyRange[0] && frequency <= fourthStringFrequencyRange[1])
+                string = 4;
+            else
+                string = 0;
+        } else
+            string = -1;
 
         return string;
     }
 
     // Return status of played string
-    public int getStatus(double frequency) {
-        int string = getString(frequency);
+    // 1 - higher
+    // 2 - lower
+    // 3 - tuned
+    // 0 - to loud
+    // -1 - to quit
+    public int getStatus(double frequency, double magnitude) {
+        int string = getString(frequency, magnitude);
         int status;
         switch (string) {
             case (1):
-                if (frequency < firstStringTunedFrequency[0])
-                    status = 1;
-                else if (frequency > firstStringTunedFrequency[1])
-                    status = 2;
-                else
-                    status = 3;
+                status = statusByFrequency(firstStringTunedFrequency, frequency);
                 break;
 
             case (2):
-                if (frequency < secondStringTunedFrequency[0])
-                    status = 1;
-                else if (frequency > secondStringTunedFrequency[1])
-                    status = 2;
-                else
-                    status = 3;
+                status = statusByFrequency(secondStringTunedFrequency, frequency);
                 break;
 
             case (3):
-                if (frequency < thirdStringTunedFrequency[0])
-                    status = 1;
-                else if (frequency > thirdStringTunedFrequency[1])
-                    status = 2;
-                else
-                    status = 3;
+                status = statusByFrequency(thirdStringTunedFrequency, frequency);
                 break;
 
             case (4):
-                if (frequency < fourthStringTunedFrequency[0])
-                    status = 1;
-                else if (frequency > fourthStringTunedFrequency[1])
-                    status = 2;
-                else
-                    status = 3;
+                status = statusByFrequency(fourthStringTunedFrequency, frequency);
+                break;
+
+            case (0):
+                status = 0;
                 break;
 
             default:
-                status = 0;
+                status = -1;
                 break;
         }
 
+        return status;
+    }
+
+    public int statusByFrequency(double[] stringParams, double frequency){
+        int status;
+        if (frequency < stringParams[0])
+            status = 1;
+        else if (frequency > stringParams[1])
+            status = 2;
+        else
+            status = 3;
         return status;
     }
 }

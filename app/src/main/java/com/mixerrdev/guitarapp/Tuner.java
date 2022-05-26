@@ -2,7 +2,6 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
 import android.Manifest;
@@ -64,12 +63,10 @@ public class Tuner extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, TunerStatus.class, null).commit();
                 params = false;
                 buttonParams.setText(R.string.params);
-                result.setVisibility(View.VISIBLE);
             } else {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, Params.class, null).commit();
                 params = true;
                 buttonParams.setText(R.string.tuning);
-                result.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -161,13 +158,18 @@ public class Tuner extends AppCompatActivity {
                 audioRecord.read(myBuffer, 0, myBufferSize);
 
                 // Getting frequency from PCM
-                FrequencyScanner fft = new FrequencyScanner();
+                FrequencyMagnitudeScanner fft = new FrequencyMagnitudeScanner();
                 double[] rst = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
 
-                // Show frequency
+                // Working with frequency
                 runOnUiThread(() -> result.setText(Double.toString(rst[0])));
-
                 Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
+
+                // TODO CLASSIC -> TRUE/FALSE
+                TuningLogic tl = new TuningLogic(true);
+                int string = tl.getString(rst[0], rst[1]);
+                int status = tl.getStatus(rst[0], rst[1]);
+
 
             }
         }).start();

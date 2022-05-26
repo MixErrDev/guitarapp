@@ -2,10 +2,10 @@ package com.mixerrdev.guitarapp;
 
 import org.jtransforms.fft.DoubleFFT_1D;
 
-public class FrequencyScanner {
+public class FrequencyMagnitudeScanner {
     private double[] window;
 
-    public FrequencyScanner() {
+    public FrequencyMagnitudeScanner() {
         window = null;
     }
 
@@ -18,22 +18,22 @@ public class FrequencyScanner {
         fft.realForward(a);
 
         // Find the peak magnitude and it's index
-        double maxMag = Double.NEGATIVE_INFINITY;
+        double maxMagnitude = Double.NEGATIVE_INFINITY;
         int maxInd = -1;
 
         for(int i = 0; i < a.length / 2; ++i) {
-            double re  = a[2*i];
-            double im  = a[2*i+1];
-            double mag = Math.sqrt(re * re + im * im);
+            double real  = a[2*i];
+            double imaginary  = a[2*i+1];
+            double magnitude = Math.sqrt(real * real + imaginary * imaginary);
 
-            if(mag > maxMag) {
-                maxMag = mag;
+            if(magnitude > maxMagnitude) {
+                maxMagnitude = magnitude;
                 maxInd = i;
             }
         }
         // Calculate the frequency
         double frequency = (double)sampleRate * maxInd / (double) (a.length / 2);
-        return new double[] {frequency, maxMag};
+        return new double[] {frequency, maxMagnitude};
     }
 
     private void buildHammWindow(int size) {
