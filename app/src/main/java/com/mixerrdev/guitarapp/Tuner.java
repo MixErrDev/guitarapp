@@ -77,12 +77,8 @@ public class Tuner extends AppCompatActivity {
             }
         });
 
-        // Start recording
-        createAudioRecorder();
-        recordStart();
-
         // Start reading PCM data and getting frequency
-        readStart();
+        tuning();
 
         // Developing mode
         frequencyText.setVisibility(View.INVISIBLE);
@@ -105,52 +101,37 @@ public class Tuner extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        readStop();
-        recordStop();
+        tuningStop();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        readStop();
-        recordStop();
+        tuning();
     }
 
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        recordStart();
-        readStart();
+        tuning();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        readStop();
-        recordStop();
+        tuningStop();
 
         release();
     }
 
 
-    public void createAudioRecorder() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, myBufferSize);
-        }
-    }
 
-    public void recordStart() {
-        Log.d(TAG, "record start");
-        audioRecord.startRecording();
-        int recordingState = audioRecord.getRecordingState();
-        Log.d(TAG, "recordingState = " + recordingState);
-    }
-
-    public void readStart() {
+    public void tuning() {
+        createAudioRecorder();
+        recordStart();
         Log.d(TAG, "read start");
         isReading = true;
         new Thread(() -> {
@@ -169,7 +150,6 @@ public class Tuner extends AppCompatActivity {
                 double[] rst = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
 
                 // Working with frequency
-//                runOnUiThread(() -> frequencyText.setText(Double.toString(rst[0])));
                 Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
 
                 // TODO CLASSIC -> TRUE/FALSE
@@ -222,6 +202,19 @@ public class Tuner extends AppCompatActivity {
             }
         }).start();
     }
+    public void createAudioRecorder() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, myBufferSize);
+        }
+    }
+
+    public void recordStart() {
+        Log.d(TAG, "record start");
+        audioRecord.startRecording();
+        int recordingState = audioRecord.getRecordingState();
+        Log.d(TAG, "recordingState = " + recordingState);
+    }
 
     public void readStop() {
         Log.d(TAG, "read stop");
@@ -231,6 +224,10 @@ public class Tuner extends AppCompatActivity {
     public void recordStop() {
         Log.d(TAG, "record stop");
         audioRecord.stop();
+    }
+
+    public void tuningStop() {
+
     }
 
     public void release() {
