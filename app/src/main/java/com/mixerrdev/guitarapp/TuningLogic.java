@@ -11,7 +11,7 @@ public class TuningLogic {
     public double[] thirdStringTunedFrequency;
     public double[] fourthStringTunedFrequency;
 
-    final double MIN_MAGNITUDE = 80000.0;
+    final double MIN_MAGNITUDE = 70000.0;
 
     public boolean classic = true;
 
@@ -43,6 +43,8 @@ public class TuningLogic {
     }
 
     // Return number of played string
+    // 0 - to loud
+    // -1 - to quit
     public int getString(double frequency, double magnitude) {
         int string;
 

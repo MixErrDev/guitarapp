@@ -8,4 +8,9 @@
     <string name="tuned">TUNED</string>
     <string name="quit">TO QUIT</string>
     <string name="loud">TO LOUD</string>
+    <string name="first">1 STRING</string>
+    <string name="second">2 STRING</string>
+    <string name="third">3 STRING</string>
+    <string name="fourth">4 STRING</string>
+    <string name="unidentified">…</string>
 </resources>

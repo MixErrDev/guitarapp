@@ -33,11 +33,12 @@ public class Tuner extends AppCompatActivity {
     boolean params = false;
     Button buttonParams;
     FragmentContainerView fcv;
-    TextView result;
+
 
     // developing mode vars
     boolean devMode = false;
     int clickCounter = 0;
+    TextView frequencyText;
 
 
     @Override
@@ -51,7 +52,7 @@ public class Tuner extends AppCompatActivity {
         // Keeping screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Finding
-        result = findViewById(R.id.result);
+        frequencyText = findViewById(R.id.result);
         buttonParams = findViewById(R.id.buttonParams);
         fcv = findViewById(R.id.fragment);
 
@@ -78,16 +79,16 @@ public class Tuner extends AppCompatActivity {
         readStart();
 
         // Developing mode
-        result.setVisibility(View.INVISIBLE);
+        frequencyText.setVisibility(View.INVISIBLE);
         fcv.setOnClickListener((View v) -> {
             clickCounter++;
             if (clickCounter == 2 && devMode) {
                 clickCounter = 0;
-                result.setVisibility(View.INVISIBLE);
+                frequencyText.setVisibility(View.INVISIBLE);
                 devMode = false;
             } else if (clickCounter == 2 ) {
                 clickCounter = 0;
-                result.setVisibility(View.VISIBLE);
+                frequencyText.setVisibility(View.VISIBLE);
                 devMode = true;
             }
         });
@@ -162,13 +163,23 @@ public class Tuner extends AppCompatActivity {
                 double[] rst = fft.extractFrequencyMagnitude(myBuffer, sampleRate);
 
                 // Working with frequency
-                runOnUiThread(() -> result.setText(Double.toString(rst[0])));
+//                runOnUiThread(() -> frequencyText.setText(Double.toString(rst[0])));
                 Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
 
                 // TODO CLASSIC -> TRUE/FALSE
                 TuningLogic tl = new TuningLogic(true);
                 int string = tl.getString(rst[0], rst[1]);
                 int status = tl.getStatus(rst[0], rst[1]);
+
+                runOnUiThread(() -> frequencyText.setText(Integer.toString(status)));
+
+                Bundle bundle = new Bundle();
+                int[] data = new int[] {string, status};
+                bundle.putInt("data", string);
+                TunerStatus tunerStatus = new TunerStatus();
+                tunerStatus.setArguments(bundle);
+
+
 
 
             }
