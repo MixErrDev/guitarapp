@@ -162,7 +162,6 @@ public class Tuner extends AppCompatActivity implements OnDataPass{
                 // Working with frequency
                 Log.d(TAG, "frequency = " + rst[0] + "; magnitude = " + rst[1]);
 
-                // TODO CLASSIC -> TRUE/FALSE
                 TuningLogic tl = new TuningLogic(classic);
                 int string = tl.getString(rst[0], rst[1]);
                 int status = tl.getStatus(rst[0], rst[1]);
