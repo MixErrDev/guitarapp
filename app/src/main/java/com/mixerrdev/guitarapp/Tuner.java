@@ -2,10 +2,8 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class Tuner extends AppCompatActivity {
@@ -52,6 +49,7 @@ public class Tuner extends AppCompatActivity {
         // Finding
         result = findViewById(R.id.result);
         buttonParams = findViewById(R.id.buttonParams);
+
         // Fragment logic
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, TunerStatus.class, null).commit();
 

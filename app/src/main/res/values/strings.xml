@@ -3,6 +3,9 @@
     <string name="tuner">Start Tuning!</string>
     <string name="params">PARAMS</string>
     <string name="tuning">TUNING</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="higher">HIGHER</string>
+    <string name="lower">LOWER</string>
+    <string name="tuned">TUNED</string>
+    <string name="quit">TO QUIT</string>
+    <string name="loud">TO LOUD</string>
 </resources>
