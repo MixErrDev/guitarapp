@@ -13,6 +13,7 @@ public class TuningLogic {
 
     final double MIN_MAGNITUDE = 80000.0;
 
+    // Init arrays
     public TuningLogic(boolean classic) {
         if (classic) {
             firstStringFrequencyRange = new double[]{415.0, 465.0};
@@ -37,6 +38,7 @@ public class TuningLogic {
         }
     }
 
+    // Return number of played string
     public int getString(double frequency) {
         int string;
 
@@ -54,6 +56,7 @@ public class TuningLogic {
         return string;
     }
 
+    // Return status of played string
     public int getStatus(double frequency) {
         int string = getString(frequency);
         int status;

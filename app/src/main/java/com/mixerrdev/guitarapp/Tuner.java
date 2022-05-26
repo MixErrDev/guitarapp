@@ -2,6 +2,8 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -18,24 +20,27 @@ import android.widget.TextView;
 
 public class Tuner extends AppCompatActivity {
 
-    TextView result;
-
-
+    // Audio logic vars
     int sampleRate = 8000;
     int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-
     int minInternalBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
     int myBufferSize = minInternalBufferSize * 2;
-
-
     boolean isReading;
-
     final String TAG = "myLogs";
     AudioRecord audioRecord;
 
+    // Activity logic vars
     boolean params = false;
     Button buttonParams;
+    FragmentContainerView fcv;
+    TextView result;
+
+    // developing mode vars
+    boolean devMode = false;
+    int clickCounter = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class Tuner extends AppCompatActivity {
         // Finding
         result = findViewById(R.id.result);
         buttonParams = findViewById(R.id.buttonParams);
+        fcv = findViewById(R.id.fragment);
 
         // Fragment logic
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, TunerStatus.class, null).commit();
@@ -58,10 +64,12 @@ public class Tuner extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, TunerStatus.class, null).commit();
                 params = false;
                 buttonParams.setText(R.string.params);
+                result.setVisibility(View.VISIBLE);
             } else {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, Params.class, null).commit();
                 params = true;
                 buttonParams.setText(R.string.tuning);
+                result.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -71,6 +79,21 @@ public class Tuner extends AppCompatActivity {
 
         // Start reading PCM data and getting frequency
         readStart();
+
+        // Developing mode
+        result.setVisibility(View.INVISIBLE);
+        fcv.setOnClickListener((View v) -> {
+            clickCounter++;
+            if (clickCounter == 2 && devMode) {
+                clickCounter = 0;
+                result.setVisibility(View.INVISIBLE);
+                devMode = false;
+            } else if (clickCounter == 2 ) {
+                clickCounter = 0;
+                result.setVisibility(View.VISIBLE);
+                devMode = true;
+            }
+        });
     }
 
 
