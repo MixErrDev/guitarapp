@@ -2,7 +2,6 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentContainerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -30,15 +29,17 @@ public class Tuner extends AppCompatActivity {
     AudioRecord audioRecord;
 
     // Activity logic vars
-    boolean params = false;
+    boolean paramsActive = false;
     Button buttonParams;
-    FragmentContainerView fcv;
+    boolean classic = true;
+
+    String statusResult;
 
 
     // developing mode vars
     boolean devMode = false;
     int clickCounter = 0;
-    TextView frequencyText;
+    TextView frequencyText, stringText, statusText;
 
 
     @Override
@@ -54,20 +55,25 @@ public class Tuner extends AppCompatActivity {
         // Finding
         frequencyText = findViewById(R.id.result);
         buttonParams = findViewById(R.id.buttonParams);
-        fcv = findViewById(R.id.fragment);
+        stringText = findViewById(R.id.stringText);
+        statusText = findViewById(R.id.statusText);
 
         // Fragment logic
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, TunerStatus.class, null).commit();
-
+        Params p = new Params();
         buttonParams.setOnClickListener((View v) -> {
-            if (params) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, TunerStatus.class, null).commit();
-                params = false;
+            if (paramsActive) {
+                getSupportFragmentManager().beginTransaction().remove(p).commit();
+                paramsActive = false;
                 buttonParams.setText(R.string.params);
+                stringText.setVisibility(View.VISIBLE);
+                statusText.setVisibility(View.VISIBLE);
+
             } else {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, Params.class, null).commit();
-                params = true;
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, p, null).commit();
+                paramsActive = true;
                 buttonParams.setText(R.string.tuning);
+                stringText.setVisibility(View.INVISIBLE);
+                statusText.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -80,7 +86,7 @@ public class Tuner extends AppCompatActivity {
 
         // Developing mode
         frequencyText.setVisibility(View.INVISIBLE);
-        fcv.setOnClickListener((View v) -> {
+        statusText.setOnClickListener((View v) -> {
             clickCounter++;
             if (clickCounter == 2 && devMode) {
                 clickCounter = 0;
@@ -171,15 +177,46 @@ public class Tuner extends AppCompatActivity {
                 int string = tl.getString(rst[0], rst[1]);
                 int status = tl.getStatus(rst[0], rst[1]);
 
-                runOnUiThread(() -> frequencyText.setText(Integer.toString(status)));
-
-                Bundle bundle = new Bundle();
-                int[] data = new int[] {string, status};
-                bundle.putInt("data", string);
-                TunerStatus tunerStatus = new TunerStatus();
-                tunerStatus.setArguments(bundle);
 
 
+                switch (string) {
+                    case (-1):
+                    case (0):
+                        runOnUiThread(() -> stringText.setText(R.string.unidentified));
+                        break;
+                    case (1):
+                        runOnUiThread(() -> stringText.setText(R.string.first));
+                        break;
+                    case (2):
+                        runOnUiThread(() -> stringText.setText(R.string.second));
+                        break;
+                    case (3):
+                        runOnUiThread(() -> stringText.setText(R.string.third));
+                        break;
+                    case (4):
+                        runOnUiThread(() -> stringText.setText(R.string.fourth));
+                        break;
+                }
+
+                switch (status) {
+                    case (-1):
+                        runOnUiThread(() -> statusText.setText(R.string.quit));
+                        break;
+                    case (0):
+                        runOnUiThread(() -> statusText.setText(R.string.loud));
+                        break;
+                    case (1):
+                        runOnUiThread(() -> statusText.setText(R.string.higher));
+                        break;
+                    case (2):
+                        runOnUiThread(() -> statusText.setText(R.string.lower));
+                        break;
+                    case (3):
+                        runOnUiThread(() -> statusText.setText(R.string.tuned));
+                        break;
+                }
+
+                runOnUiThread(() -> frequencyText.setText(Double.toString(rst[0])));
 
 
             }

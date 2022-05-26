@@ -23,8 +23,8 @@ public class TuningLogic {
             thirdStringFrequencyRange = new double[]{220.0, 299.0};
             fourthStringFrequencyRange = new double[]{350.0, 414.0};
 
-            firstStringTunedFrequency = new double[]{439.5, 440.5};
-            secondStringTunedFrequency = new double[]{329.0, 330.0};
+            firstStringTunedFrequency = new double[]{438.0, 441.9};
+            secondStringTunedFrequency = new double[]{327.5, 331.5};
             thirdStringTunedFrequency = new double[]{261.0, 262.1};
             fourthStringTunedFrequency = new double[]{391.5, 392.5};
         } else {
