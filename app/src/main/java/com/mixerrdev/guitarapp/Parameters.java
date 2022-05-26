@@ -29,10 +29,11 @@ public class Parameters extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parameters, container, false);
-
+        // Find buttons
         classic = view.findViewById(R.id.classic);
         d = view.findViewById(R.id.d);
 
+        // Send data
         classic.setOnClickListener((View v) -> {
             mDataPasser.onDataPass(true);
             Toast.makeText(getContext(), "Classic tuning parameter", Toast.LENGTH_SHORT).show();

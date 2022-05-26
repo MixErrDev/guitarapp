@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 
 public class Tuner extends AppCompatActivity implements OnDataPass{
+    // Get data from fragment
     @Override
     public void onDataPass(boolean parameter) {
         classic = parameter;
