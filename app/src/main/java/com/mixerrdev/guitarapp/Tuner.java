@@ -2,7 +2,6 @@ package com.mixerrdev.guitarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -39,7 +38,6 @@ public class Tuner extends AppCompatActivity implements OnDataPass{
     Button buttonParams;
     boolean classic = true;
 
-    String statusResult;
 
 
     // developing mode vars
