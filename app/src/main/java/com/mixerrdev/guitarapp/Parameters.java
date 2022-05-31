@@ -43,8 +43,6 @@ public class Parameters extends Fragment {
             mDataPasser.onDataPass(false);
             Toast.makeText(getContext(), "D-tuning parameter", Toast.LENGTH_SHORT).show();
         });
-
-
         return view;
     }
 }
