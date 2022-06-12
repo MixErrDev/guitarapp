@@ -36,7 +36,8 @@ public class FrequencyMagnitudeScanner {
         return new double[] {frequency, maxMagnitude};
     }
 
-    private void buildHammWindow(int size) {
+    // Hamming window for cleaning data
+    private void buildHammingWindow(int size) {
         if(window != null && window.length == size) {
             return;
         }
@@ -49,7 +50,7 @@ public class FrequencyMagnitudeScanner {
     private double[] applyWindow(short[] input) {
         double[] res = new double[input.length];
 
-        buildHammWindow(input.length);
+        buildHammingWindow(input.length);
         for(int i = 0; i < input.length; ++i) {
             res[i] = (double)input[i] * window[i];
         }
