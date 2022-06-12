@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Get permission from user
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-            MicPermission.getMicrophonePermission(this);
+            MicPermission.requestMicPermission(this);
         }
 
         super.onCreate(savedInstanceState);
@@ -61,15 +61,31 @@ public class MainActivity extends AppCompatActivity {
         tuner = findViewById(R.id.tuner);
 
         // Checking the result of getting permission and starting tuner
-        tuner.setOnClickListener((View v) -> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this, "Sorry, we need your permission :(", Toast.LENGTH_SHORT).show();
-            } else {
-                intent = new Intent("android.intent.action.tuner");
-                startActivity(intent);
-            }
-        });
+        tuner.setOnClickListener((View v) -> startTuner(true));
     }
+
+    // When permission denied, user can't start tuning
+    // user can give permission, when he click on button "start tuning"
+    private void startTuner(boolean first) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED && first) {
+            MicPermission.requestMicPermission(this);
+            startTuner(false);
+        }
+
+        else if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
+            return;
+        }
+
+        else {
+            intent = new Intent("android.intent.action.tuner");
+            startActivity(intent);
+        }
+    }
+
+
+
 
 
     // Overriding onResume for playing video
