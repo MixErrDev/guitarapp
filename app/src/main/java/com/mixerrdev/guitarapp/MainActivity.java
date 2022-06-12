@@ -60,21 +60,15 @@ public class MainActivity extends AppCompatActivity {
         tuner = findViewById(R.id.tuner);
 
         // Checking the result of getting permission and starting tuner
-        tuner.setOnClickListener((View v) -> startTuner(true));
+        tuner.setOnClickListener((View v) -> startTuner());
     }
 
     // When permission denied, user can't start tuning
     // user can give permission, when he click on button "start tuning"
-    private void startTuner(boolean first) {
+    private void startTuner() {
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED && first) {
-            MicPermission.requestMicPermission(this);
-            startTuner(false);
-        }
-
-        else if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-            return;
+            MicPermission.requestMicPermission(this);
         }
 
         else {

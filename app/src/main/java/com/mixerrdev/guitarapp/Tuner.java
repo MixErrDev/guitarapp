@@ -202,8 +202,8 @@ public class Tuner extends AppCompatActivity implements OnDataPass{
                         runOnUiThread(() -> statusText.setText(R.string.tuned));
                         break;
                 }
-
-                runOnUiThread(() -> frequencyText.setText(Double.toString(rst[0])));
+                if (devMode)
+                    runOnUiThread(() -> frequencyText.setText(Double.toString(rst[0])));
 
 
             }
