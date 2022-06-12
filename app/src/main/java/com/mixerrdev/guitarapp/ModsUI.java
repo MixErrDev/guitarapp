@@ -6,7 +6,7 @@ import android.view.View;
 
 public class ModsUI {
 
-    // Hiding NavigationBar
+    // Hiding NavigationBar when version is younger than kitkat
     public static void hide(Activity activity) {
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

@@ -5,7 +5,7 @@ import android.app.Activity;
 
 import androidx.core.app.ActivityCompat;
 
-
+// Request permission
 public class MicPermission {
     private static int MICROPHONE_PERMISSION_CODE = 200;
 

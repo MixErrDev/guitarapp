@@ -56,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        // Button
+        // Finding button
         tuner = findViewById(R.id.tuner);
 
         // Checking the result of getting permission and starting tuner
@@ -83,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-
-
 
 
     // Overriding onResume for playing video
