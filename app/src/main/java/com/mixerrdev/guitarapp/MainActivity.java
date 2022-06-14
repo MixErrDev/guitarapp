@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Finding button
-        tuner = findViewById(R.id.tuner);
+        tuner = (Button) findViewById(R.id.tuner);
 
         // Checking the result of getting permission and starting tuner
         tuner.setOnClickListener((View v) -> startTuner());
@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
             MicPermission.requestMicPermission(this);
         }
-
         else {
             intent = new Intent("android.intent.action.tuner");
             startActivity(intent);

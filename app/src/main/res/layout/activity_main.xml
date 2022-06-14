@@ -39,7 +39,7 @@
         android:fontFamily="serif"
 
 
-        android:text="@string/tuner"
+        android:text="@string/startTuning"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias=".9"
