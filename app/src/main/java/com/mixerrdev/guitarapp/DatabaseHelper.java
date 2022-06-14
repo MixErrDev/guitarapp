@@ -1,3 +1,5 @@
+// todo Database with tuning parameters: user also can add his own parameters
+
 package com.mixerrdev.guitarapp;
 
 

@@ -14,7 +14,7 @@ public class TuningLogic {
     final double MIN_MAGNITUDE = 70000.0;
 
     public boolean classic = true;
-
+    // todo initialization arrays with data from database
     // Init arrays
     public TuningLogic(boolean classic) {
         if (classic) {
